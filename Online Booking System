@@ -1,0 +1,102 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+class Flight {
+    private String flightNumber;
+    private int availableSeats;
+
+    public Flight(String flightNumber, int totalSeats) {
+        this.flightNumber = flightNumber;
+        this.availableSeats = totalSeats;
+    }
+
+    public String getFlightNumber() {
+        return flightNumber;
+    }
+
+    public int getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public void bookSeats(int numSeats) {
+        if (numSeats > 0 && numSeats <= availableSeats) {
+            availableSeats -= numSeats;
+            System.out.println("Booking successful for " + numSeats + " seat(s) on flight " + flightNumber);
+        } else {
+            System.out.println("Sorry, not enough available seats for the requested number.");
+        }
+    }
+}
+
+class BookingSystem {
+    private Map<String, Flight> flights;
+
+    public BookingSystem() {
+        flights = new HashMap<>();
+        initializeFlights();
+    }
+
+    private void initializeFlights() {
+        Flight flight1 = new Flight("ABC123", 50);
+        Flight flight2 = new Flight("XYZ789", 30);
+
+        flights.put("ABC123", flight1);
+        flights.put("XYZ789", flight2);
+    }
+
+    public void displayAvailableFlights() {
+        System.out.println("Available Flights:");
+        for (Map.Entry<String, Flight> entry : flights.entrySet()) {
+            Flight flight = entry.getValue();
+            System.out.println("Flight " + flight.getFlightNumber() + ": " + flight.getAvailableSeats() + " seats available");
+        }
+    }
+
+    public void bookFlight(String flightNumber, int numSeats) {
+        Flight flight = flights.get(flightNumber);
+        if (flight != null) {
+            flight.bookSeats(numSeats);
+        } else {
+            System.out.println("Invalid flight number. Please choose a valid flight.");
+        }
+    }
+}
+
+public class OnlineBookingSystem {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        BookingSystem bookingSystem = new BookingSystem();
+
+        while (true) {
+            System.out.println("\n1. Display Available Flights");
+            System.out.println("2. Book a Flight");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+
+            switch (choice) {
+                case 1:
+                    bookingSystem.displayAvailableFlights();
+                    break;
+
+                case 2:
+                    System.out.print("Enter the flight number: ");
+                    String flightNumber = scanner.nextLine();
+                    System.out.print("Enter the number of seats to book: ");
+                    int numSeats = scanner.nextInt();
+                    bookingSystem.bookFlight(flightNumber, numSeats);
+                    break;
+
+                case 3:
+                    System.out.println("Exiting online booking system. Goodbye!");
+                    System.exit(0);
+
+                default:
+                    System.out.println("Invalid choice. Please enter a number between 1 and 3.");
+            }
+        }
+    }
+}
